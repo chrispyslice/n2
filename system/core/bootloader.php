@@ -17,5 +17,14 @@
  
 namespace n2;
  
+if(!defined('N2_INCLUDE')) exit('No direct access permitted');
+
+require_once('Loader.class' . EXT);
+System\Loader::register('n2\System\\');
+
+System\Loader::loadPackage('TestPackage');
+
+$t = new Abstraction\Test();
+
 /* End of file n2.php */
 /* Location: ./system/n2/n2.php */

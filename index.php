@@ -25,6 +25,7 @@ namespace n2;
  
 error_reporting(E_ALL);
 
+define('N2_INCLUDE', true);
 define('APPLICATION_DIR', 'application');
 
 // --------------------------------------------------------------------------
@@ -40,8 +41,7 @@ define('SYSTEM_DIR', 'system');
  * And away we go...
  */
  
-require_once SYSTEM_DIR . '/n2/n2' . EXT;
-
+require_once SYSTEM_DIR . '/core/bootloader' . EXT;
  
 /* End of file index.php */
 /* Location: ./index.php */
