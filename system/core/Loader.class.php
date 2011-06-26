@@ -22,9 +22,9 @@ if(!defined('N2_INCLUDE')) exit();
 class Loader
 {
 	private static $packageDir = 'packages';
+	private static $manifestExt = '.manifest';
 	private static $loadedClasses = array();
 	private static $loadedPackages = array();
-	private static $manifestExt = 'ma';
 	
 	// --------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ class Loader
 	public static function loadClass($target)
 	{
 		// Generate the path to the .php file we're going to load
-		$payload = SYSTEM_DIR . '/' . Loader::$packageDir . '/' . substr(str_replace(array('/', '\\'), \DIRECTORY_SEPARATOR, $target), 3) . EXT;
+		$payload = SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . substr(str_replace(array('/', '\\'), \DIRECTORY_SEPARATOR, $target), 3) . EXT;
 		
 		// Load it if it exists
 		if(file_exists($payload))
@@ -51,19 +51,22 @@ class Loader
 	 */
 	public static function loadPackage($target)
 	{
+		// Change the namespace separator to 
 		$payload = str_replace(array('/', '\\'), \DIRECTORY_SEPARATOR, $target);
 
-		$manifest = parse_ini_file(SYSTEM_DIR . '/' . Loader::$packageDir . '/' . $payload . '/' . $target . '.manifest' . EXT, true);
-
-		var_dump($manifest);
-		
+		// List the contents of the directory and include every PHP file we find
+		foreach(self::listDirectory(SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . $payload) as $item)
+			if(substr($item, -4, 4) == EXT)
+				require_once SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . $payload . DIRECTORY_SEPARATOR . $item;
+				
+		// Add the $target to the list of loaded packages
 		self::$loadedPackages[] = $target;
 	}
 
 	/**
 	 * Register Loader::loadClass as the __autoload function
 	 */
-	public static function register($namespace)
+	public static function registerAutoloadHandler($namespace)
 	{
 		spl_autoload_register($namespace . 'Loader::loadClass');
 	}
@@ -71,7 +74,7 @@ class Loader
 	/**
 	 * Unregister the __autoload function
 	 */
-	public static function unregister($namespace)
+	public static function unregisterAutoloadHandler($namespace)
 	{
 		spl_autoload_unregister($namespace . 'Loader::loadClass');
 	}
@@ -97,7 +100,20 @@ class Loader
 	 */
 	public static function import($target)
 	{
-		
+		if(substr($target, -1, 1) == '*')
+			self::loadPackage($target);
+		else
+			self::loadClass($target);
+	}
+	
+	// --------------------------------------------------------------------------
+	
+	/**
+	 * List the contetns of a directory
+	 */
+	private static function listDirectory($directory)
+	{
+		return scandir($directory);
 	}
 }
 

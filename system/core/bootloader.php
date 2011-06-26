@@ -8,7 +8,7 @@
  * @link		http://chrisatk.in/
  * @email		contact {at} chrisatk {dot} in
  * 
- * @file		n2.php
+ * @file		bootloader.php
  * @version		1.0
  * @date		05/26/2011
  * 
@@ -19,12 +19,31 @@ namespace n2;
  
 if(!defined('N2_INCLUDE')) exit('No direct access permitted');
 
-require_once('Loader.class' . EXT);
-System\Loader::register('n2\System\\');
+// --------------------------------------------------------------------------
+// 
+// --------------------------------------------------------------------------
 
-System\Loader::loadPackage('TestPackage');
+/**
+ * Start the loader
+ */
+require_once 'Loader.class' . EXT;
 
-$t = new Abstraction\Test();
+/**
+ * Include the System package
+ */
+System\Loader::loadPackage('System');
 
-/* End of file n2.php */
-/* Location: ./system/n2/n2.php */
+// Fire events
+System\Dispatch::fire('System.beforeRegister', array());
+
+/**
+ * Register any
+ */
+System\Loader::registerAutoloadHandler('n2\System\\');
+System\NException::registerErrorHandler('n2\System\NException::_handleError');
+System\NException::registerExceptionHandler('n2\System\NException::_handleException');
+
+System\Dispatch::fire('System.a');
+
+/* End of file bootloader.php */
+/* Location: ./system/core/bootloader.php */

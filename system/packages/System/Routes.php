@@ -8,17 +8,22 @@
  * @link		http://chrisatk.in/
  * @email		contact {at} chrisatk {dot} in
  * 
- * @file		n2.php
+ * @file		Exception.php
  * @version		1.0
  * @date		05/26/2011
  * 
  * Copyright (c) 2011 Chris Atkin. All rights reserved.
  */
-
-
+ 
 namespace n2\System;
 
-class Configuration
+if(!defined('N2_INCLUDE')) exit();
+
+class Routes
 {
-	
+
 }
+
+
+/* End of file Exception.php */
+/* Location: ./system/packages/Framework/Exception.php */
