@@ -21,46 +21,9 @@ if(!defined('N2_INCLUDE')) exit();
 
 class NException extends \Exception
 {
-	/**
-	 * Register a function as the default error handler
-	 */
-	public static function registerErrorHandler($handler)
+	public function __construct($message, $code = 100)
 	{
-		set_error_handler($handler);
-	}
-	
-	/**
-	 * Register a function as the default exception handler
-	 */
-	public static function registerExceptionHandler($handler)
-	{
-		set_exception_handler($handler);
-	}
-	
-	/**
-	 * Error handler
-	 */
-	public static function _handleError($errno, $errstr, $errfile, $errline, $errcontext)
-	{
-	
-	}
-	
-	/**
-	 * Exception handler
-	 */
-	public static function _handleException()
-	{
-	
-	}
-	
-	// --------------------------------------------------------------------------
-	
-	/**
-	 * Display a generic error message
-	 */
-	private static function displayMessage()
-	{
-	
+		parent::__construct($message, $code);
 	}
 }
 

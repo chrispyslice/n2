@@ -16,17 +16,15 @@
  */
  
 namespace n2;
- 
+
 if(!defined('N2_INCLUDE')) exit('No direct access permitted');
 
-// --------------------------------------------------------------------------
-// 
 // --------------------------------------------------------------------------
 
 /**
  * Start the loader
  */
-require_once 'Loader.class' . EXT;
+require_once 'Loader' . EXT;
 
 /**
  * Include the System package
@@ -34,16 +32,25 @@ require_once 'Loader.class' . EXT;
 System\Loader::loadPackage('System');
 
 // Fire events
-System\Dispatch::fire('System.beforeRegister', array());
+System\EventDispatch::fire('System.beforeRegistration');
 
 /**
- * Register any
+ * Register any handlers we need
  */
 System\Loader::registerAutoloadHandler('n2\System\\');
-System\NException::registerErrorHandler('n2\System\NException::_handleError');
-System\NException::registerExceptionHandler('n2\System\NException::_handleException');
+System\ErrorHandler::registerErrorHandler('n2\System\ErrorHandler::_handleError');
+System\ErrorHandler::registerExceptionHandler('n2\System\ErrorHandler::_handleException');
 
-System\Dispatch::fire('System.a');
+// Fire events
+System\EventDispatch::fire('System.after');
+
+/**
+ * Instantiate system-level objects
+ */
+/*$_SYS = array(
+	'config' => System\Loader::loadClass('System/Configuration'),
+	'routes' => System\Loader::loadClass('System/Routes')
+);*/
 
 /* End of file bootloader.php */
 /* Location: ./system/core/bootloader.php */

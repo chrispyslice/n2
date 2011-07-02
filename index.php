@@ -42,6 +42,6 @@ define('SYSTEM_DIR', 'system');
  */
  
 require_once SYSTEM_DIR . '/core/bootloader' . EXT;
- 
+
 /* End of file index.php */
 /* Location: ./index.php */

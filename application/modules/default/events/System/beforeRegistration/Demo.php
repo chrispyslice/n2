@@ -8,24 +8,22 @@
  * @link		http://chrisatk.in/
  * @email		contact {at} chrisatk {dot} in
  * 
- * @file		Event.php
+ * @file		Test.php
  * @version		1.0
  * @date		05/26/2011
  * 
  * Copyright (c) 2011 Chris Atkin. All rights reserved.
  */
- 
-namespace n2\System;
 
 if(!defined('N2_INCLUDE')) exit();
 
-interface Event
+class Demo Implements \n2\System\Event
 {
-	/**
-	 * Entry pont to the Event
-	 */
-	public function fire();
+	public function fire()
+	{
+		;
+	}
 }
 
-/* End of file Event.php */
-/* Location: ./system/packages/System/Event.php */
+/* End of file Test.php */
+/* Location: ./application/modules/default/events/System/beforeRegistration/Test.php */
