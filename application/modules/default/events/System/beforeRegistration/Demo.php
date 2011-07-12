@@ -17,7 +17,7 @@
 
 if(!defined('N2_INCLUDE')) exit();
 
-class Demo Implements \n2\System\Event
+class Demo implements \System\Event
 {
 	public function fire()
 	{

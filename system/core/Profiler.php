@@ -8,24 +8,31 @@
  * @link		http://chrisatk.in/
  * @email		contact {at} chrisatk {dot} in
  * 
- * @file		n2.php
+ * @file		Profiler.php
  * @version		1.0
- * @date		05/26/2011
+ * @date		11/07/2011
  * 
  * Copyright (c) 2011 Chris Atkin. All rights reserved.
  */
-
-namespace System;
+ 
+namespace n2;
 
 if(!defined('N2_INCLUDE')) exit();
 
-class Configuration
+class Profiler
 {
-	// --------------------------------------------------------------------------
-
-	public function load($config)
-	{
+	private $startTime;
 	
+	// --------------------------------------------------------------------------
+	
+	private function microtime_float()
+	{
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
 	}
 	
+	
 }
+
+/* End of file Profiler.php */
+/* Location: ./system/core/Profiler.php */

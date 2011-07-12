@@ -32,25 +32,21 @@ require_once 'Loader' . EXT;
 System\Loader::loadPackage('System');
 
 // Fire events
-System\EventDispatch::fire('System.beforeRegistration');
+\System\EventDispatch::fire('System.beforeRegistration');
 
 /**
  * Register any handlers we need
  */
 System\Loader::registerAutoloadHandler('n2\System\\');
-System\ErrorHandler::registerErrorHandler('n2\System\ErrorHandler::_handleError');
-System\ErrorHandler::registerExceptionHandler('n2\System\ErrorHandler::_handleException');
+\System\ErrorHandler::registerErrorHandler('\System\ErrorHandler::_handleError');
+\System\ErrorHandler::registerExceptionHandler('\System\ErrorHandler::_handleException');
 
 // Fire events
-System\EventDispatch::fire('System.after');
+\System\EventDispatch::fire('System.after');
 
-/**
- * Instantiate system-level objects
- */
-/*$_SYS = array(
-	'config' => System\Loader::loadClass('System/Configuration'),
-	'routes' => System\Loader::loadClass('System/Routes')
-);*/
+// Get various system classes
+// Not using CPS here since it'd lead to a buttload of 
+$_ROUTES =& System\Loader::getInstance('System\Routes');
 
 /* End of file bootloader.php */
 /* Location: ./system/core/bootloader.php */

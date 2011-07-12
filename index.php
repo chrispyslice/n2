@@ -15,9 +15,15 @@
  * Copyright (c) 2011 Chris Atkin. All rights reserved.
  */
 
-// --------------------------------------------------------------------------
- 
 namespace n2;
+
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
+
+$time_start = microtime_float();
  
 /**
  * Start error reporting
@@ -42,6 +48,8 @@ define('SYSTEM_DIR', 'system');
  */
  
 require_once SYSTEM_DIR . '/core/bootloader' . EXT;
+
+echo (microtime_float() - $time_start) * 1000 . "&micro;seconds";
 
 /* End of file index.php */
 /* Location: ./index.php */

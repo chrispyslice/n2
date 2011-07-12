@@ -15,7 +15,7 @@
  * Copyright (c) 2011 Chris Atkin. All rights reserved.
  */
  
-namespace n2\System;
+namespace System;
 
 if(!defined('N2_INCLUDE')) exit();
 

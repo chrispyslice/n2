@@ -8,7 +8,7 @@
  * @link		http://chrisatk.in/
  * @email		contact {at} chrisatk {dot} in
  * 
- * @file		n2.php
+ * @file		Loader.php
  * @version		1.0
  * @date		26/06/2011
  * 
@@ -32,13 +32,13 @@ class Loader
 	 * Load a specific class within a package
 	 * We can mark the $target to not be instantiated
 	 */
-	public static function loadClass($target, $instantiate = true, $continuation)
+	public static function loadClass($target, $instantiate = true, $continuation = null)
 	{
 		// Implement the singleton model...
 		if(!self::loadedClass($target))
 		{
 			// Generate the path to the .php file we're going to load
-			$payload = SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $target) . EXT;
+			$payload = SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $target) . EXT;	
 
 			// Load it if it exists
 			if(file_exists($payload))
@@ -54,10 +54,31 @@ class Loader
 				self::$instantiations[$target] = new $target;
 		}
 
-		if($instantiate)
+		if($instantiate && $continuation)
 			$continuation(self::$instantiations[$target]);
 		else
 			$continuation();
+	}
+	
+	/**
+	 * Get an instance of a class. This is better than using the new keyword, since we can manage the instantiations
+	 */
+	public static function &getInstance($target)
+	{
+		if(!self::instantiatedYet($target))
+		{
+			// Generate the path to the .php file we're going to load
+			$payload = SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $target) . EXT;
+			
+			if(file_exists($payload))
+				require_once $payload;
+			else
+				trigger_error("Not found: " . $target, E_USER_ERROR);
+				
+			self::$instantiations[$target] = new $target;
+		}
+		
+		return self::$instantiations[$target];
 	}
 	
 	/**
@@ -67,12 +88,16 @@ class Loader
 	{
 		// Make sure that packages which have already been loaded aren't loaded again
 		if(self::loadedPackage($target)) return;
+		
+		// What directory will we be loading from...
+		$directory = SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . str_replace(array('/', '\\'), \DIRECTORY_SEPARATOR, $target);
 	
-		// Change the namespace separator to DIRECTORY_SEPARATOR
-		$payload = str_replace(array('/', '\\'), \DIRECTORY_SEPARATOR, $target);
-
+		// Test if the package actually exists...
+		if(!is_dir($directory))
+			trigger_error('The package <code>' . $target . '</code> does not exist');
+	
 		// List the contents of the directory and include every PHP file we find
-		foreach(self::listDirectory(SYSTEM_DIR . DIRECTORY_SEPARATOR . self::$packageDir . DIRECTORY_SEPARATOR . $payload) as $item)
+		foreach(self::listDirectory($directory) as $item)
 			if(substr($item, -4, 4) == EXT)
 				self::loadClass($target . '\\' . substr($item, 0, -4), false, function() {});
 				
@@ -102,6 +127,14 @@ class Loader
 	public static function loadedClass($target)
 	{
 		return isset(self::$loadedClasses[$target]);
+	}
+	
+	/**
+	 * Has a class already been instnatiated?
+	 */
+	public static function instantiatedYet($target)
+	{
+		return isset(self::$instantiations[$target]);
 	}
 	
 	/**
